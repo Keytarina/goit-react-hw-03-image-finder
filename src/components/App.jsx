@@ -17,23 +17,24 @@ export class App extends Component {
     images: {}
   }
 
-  // async componentDidMount() {
-  //   const response = await axios.get(`https://pixabay.com/api/?q=cat&page=1&key=${KEY_API}&image_type=photo&orientation=horizontal&per_page=12`);
-  //   // fetch(`https://pixabay.com/api/?q=cat&page=1&key=${KEY_API}&image_type=photo&orientation=horizontal&per_page=12`)
-  //   this.setState({images: response.data.hits});
-  // }
+  async componentDidMount() {
+    const response = await axios.get(`https://pixabay.com/api/?q=cat&page=1&key=${KEY_API}&image_type=photo&orientation=horizontal&per_page=12`);
+    // fetch(`https://pixabay.com/api/?q=cat&page=1&key=${KEY_API}&image_type=photo&orientation=horizontal&per_page=12`)
+    this.setState({images: response.data.hits});
+  }
 
   formSubmitHandle = (data) => {
     this.setState({ searchValue: data.inputValue });
   }
 
   render () {
+    const { images } = this.state.images;
     return (
       <div className={css.App}>
         <Searchbar onSubmit={this.formSubmitHandle}/>
         {console.log(this.state.searchValue)}
-        {/* {console.log(this.state.images)} */}
-        <ImageGallery/>
+        {console.log(this.state.images)}
+        {this.state.images && <ImageGallery images={images}/>}
         <Button/>
       </div>
     );
