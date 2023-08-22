@@ -10,16 +10,16 @@ export class Searchbar extends Component {
         if(data.trim() === '') {
             return;
         }
-        this.setState({ inputValue: event.currentTarget.value });
+        this.setState({ inputValue: data });
     }
     handleSubmit = event => {
         event.preventDefault();
         this.props.onSubmit(this.state);
-        this.resetForm();      
+        this.resetForm();  
     }
 
     resetForm = () => {
-        this.setState({ inputValue: ''});
+        this.setState({ inputValue: ''});  
     }
 
     render() {
