@@ -6,16 +6,16 @@ export class Searchbar extends Component {
         inputValue: ''
     }
     handleChange = event => {
-        event.preventDefault();
-        this.props.onSubmit(this.state);
-        this.resetForm();
-    }
-    handleSubmit = event => {
         const data = event.currentTarget.value;
         if(data.trim() === '') {
             return;
         }
         this.setState({ inputValue: event.currentTarget.value });
+    }
+    handleSubmit = event => {
+        event.preventDefault();
+        this.props.onSubmit(this.state);
+        this.resetForm();      
     }
 
     resetForm = () => {
@@ -25,11 +25,10 @@ export class Searchbar extends Component {
     render() {
         return (
             <header className={css.Searchbar}>
-                <form className={css.SearchForm} onSubmit={this.onSubmit}>
+                <form className={css.SearchForm} onSubmit={this.handleSubmit}>
                     <button 
                         type="submit" 
                         className={css.SearchForm_button} 
-                        onSubmit={this.handleSubmit}
                     >
                         <span className={css.SearchForm_button_label}>Search</span>
                     </button>
