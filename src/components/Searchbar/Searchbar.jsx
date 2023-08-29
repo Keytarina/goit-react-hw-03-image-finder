@@ -1,30 +1,31 @@
 import { Component } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import css from './Searchbar.module.css';
 
 export class Searchbar extends Component {
     state = {
         inputValue: ''
     }
-    handleChange = event => {
-        const data = event.currentTarget.value;
-        if(data.trim() === '') {
-            return;
-        }
-        this.setState({ inputValue: data });
-    }
-    handleSubmit = event => {
-        event.preventDefault();
-        this.props.onSubmit(this.state);
-        this.resetForm();  
+
+    handleChange = event => {  
+        this.setState({ inputValue: event.currentTarget.value.toLowerCase()});
     }
 
-    resetForm = () => {
-        this.setState({ inputValue: ''});  
+    handleSubmit = event => {
+        event.preventDefault();
+        if(this.state.inputValue.trim() === '') {
+            return toast.error("Упс! Я не знаю що шукати.", {autoClose: 2000});
+        }
+
+        this.props.onSubmit(this.state);
+        this.setState({ inputValue: '' });
     }
 
     render() {
         return (
             <header className={css.Searchbar}>
+                <ToastContainer />
                 <form className={css.SearchForm} onSubmit={this.handleSubmit}>
                     <button 
                         type="submit" 
@@ -39,6 +40,7 @@ export class Searchbar extends Component {
                         autoComplete="off"
                         autoFocus
                         placeholder="Search images and photos"
+                        value={this.state.inputValue}
                         onChange={this.handleChange}
                     />
                 </form>
