@@ -13,11 +13,11 @@ export class App extends Component {
   state = {
     searchValue: '',
     isLoading: false,
-  }
+  };
 
-  formSubmitHandle = (data) => {
-    this.setState({ searchValue: data.inputValue });
-  }
+  formSubmitHandle = data => {
+    this.setState({ searchValue: data });
+  };
 
   render () {
     return (
@@ -25,8 +25,7 @@ export class App extends Component {
         <Searchbar onSubmit={this.formSubmitHandle}/>
         {this.state.isLoading && <h1>Завантажуєм...</h1>}
         {this.state.searchValue && <ImageGallery searchValue={this.searchValue}/>}
-        <Button/>
-        <ToastContainer />
+        {/* <Button/> */}
       </div>
     );
   }

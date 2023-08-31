@@ -13,7 +13,7 @@ export class ImageGallery extends Component {
     async componentDidMount() {
         this.setState({ isLoading: true });
         // const response = await axios.get(`https://pixabay.com/api/?q=${this.state.searchValue}&page=1&key=${KEY_API}&image_type=photo&orientation=horizontal&per_page=12`);
-        
+        console.log(this.props.searchValue);
         setTimeout(() => {
           fetch(`https://pixabay.com/api/?q=${this.props.searchValue}&page=1&key=${KEY_API}&image_type=photo&orientation=horizontal&per_page=12`)
           .then(response => response.json())
