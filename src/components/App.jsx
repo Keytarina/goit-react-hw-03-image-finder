@@ -1,20 +1,17 @@
 import React, { Component } from "react";
-
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-import css from 'components/App.module.css';
-
 import { Searchbar } from 'components/Searchbar/Searchbar';
 import { ImageGallery } from 'components/ImageGallery/ImageGallery';
 import { Button } from 'components/Button/Button';
-
-import { getImages } from 'api/api';
+import imagesAPI from 'api/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import css from 'components/App.module.css';
 
 export class App extends Component {
   state = {
     searchValue: '',
     isLoading: false,
+    error: '',
     images: [],
     page: 1
   };
@@ -24,14 +21,16 @@ export class App extends Component {
     if(prevState.page !== page || prevState.searchValue !== searchValue) {
       this.setState({ isLoading: true });
 
-      getImages(searchValue, page)
+      // const data = await getImages(searchValue, page);
+      // console.log(data);
+      imagesAPI.fetchImages(searchValue, page)
       .then(response => this.setState(prev => {
         return {
           images: [...prev.images, ...response.hits],
           totalImages: response.totalImages,
-        }
+        } 
       }))
-      .catch(error => console.error(error))
+      .catch(error => this.setState({ error })) 
       .finally(this.setState({ isLoading: false }));
     }
   }
@@ -41,9 +40,10 @@ export class App extends Component {
   };
 
   render () {
-    const { images, isLoading } = this.state;
+    const { images, isLoading, error } = this.state;
     return (
       <div className={css.App}>
+        {error && toast.error("Error", {autoClose: 2000})}
         <Searchbar onSubmit={this.formSubmitHandle}/>
         {isLoading && <h1>Завантажуєм...</h1>}
         {images.length > 0 && <ImageGallery images={images}/>}
