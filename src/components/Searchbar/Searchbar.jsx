@@ -1,11 +1,10 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { IconContext } from "react-icons";
-import { AiOutlineSearch } from "react-icons/ai";
+import { toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { AiOutlineSearch } from "react-icons/ai";
 
 import css from './Searchbar.module.css';
 
@@ -20,26 +19,23 @@ export class Searchbar extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        if(this.state.inputValue.trim() === '') {
+        const query = this.state.inputValue.trim().toLowerCase();
+        if(!query) {
             return toast.error("Упс! Я не знаю що шукати.", {autoClose: 2000});
         }
-        this.props.onSubmit(this.state.inputValue);
+        this.props.onSubmit(query);
         this.setState({ inputValue: '' });
     }
 
     render() {
         return (
             <header className={css.Searchbar}>           
-                <ToastContainer />
-                <form className={css.SearchForm} onSubmit={this.handleSubmit}>          
-                        <button 
-                            type="submit" 
-                            className={css.SearchForm_button} 
-                        >
-                                <IconContext.Provider value={{ color: "black", size: "25px" }}>
-                                    <AiOutlineSearch />
-                                </IconContext.Provider>                                
-                        </button>                 
+                <form className={css.SearchForm} onSubmit={this.handleSubmit}>   
+
+                    <button type="submit" className={css.SearchForm_button}>
+                        <AiOutlineSearch  color="black" size="25px"/>
+                    </button>    
+
                     <input
                         className={css.SearchForm_input}
                         type="text"
@@ -49,6 +45,7 @@ export class Searchbar extends Component {
                         onChange={this.handleChange}
                         value={this.state.inputValue}
                     />
+
                 </form>
             </header>
         );
