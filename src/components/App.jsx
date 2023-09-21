@@ -4,6 +4,7 @@ import { ImageGallery } from 'components/ImageGallery/ImageGallery';
 import { Button } from 'components/Button/Button';
 import imagesAPI from 'api/api';
 import { ToastContainer, toast } from 'react-toastify';
+import { ColorRing } from  'react-loader-spinner'
 import 'react-toastify/dist/ReactToastify.css';
 import css from 'components/App.module.css';
 
@@ -13,7 +14,8 @@ export class App extends Component {
     isLoading: false,
     error: '',
     images: [],
-    page: 1
+    endCollection: false,
+    page: 1,
   };
 
   async componentDidUpdate(_, prevState) {
@@ -21,17 +23,30 @@ export class App extends Component {
     if(prevState.page !== page || prevState.searchValue !== searchValue) {
       this.setState({ isLoading: true });
 
-      // const data = await getImages(searchValue, page);
-      // console.log(data);
-      imagesAPI.fetchImages(searchValue, page)
-      .then(response => this.setState(prev => {
-        return {
-          images: [...prev.images, ...response.hits],
-          totalImages: response.totalImages,
-        } 
-      }))
-      .catch(error => this.setState({ error })) 
-      .finally(this.setState({ isLoading: false }));
+      try {
+        const response = await imagesAPI.getImages(searchValue, page);
+
+        this.setState(prevState => ({
+          images: [...prevState.images, ...response.hits],
+        }));
+
+        if (!response.totalHits) {
+          return toast.error(
+            'Sorry, there are no images matching your search query. Please try again'
+          );
+        }
+
+        const totalPages = Math.ceil(response.totalHits / 12);
+
+        if (page === totalPages) {
+          this.setState({ endCollection: true });
+          toast.success('No more pictures');
+        }
+      } catch (error) {
+        console.log('Error', error.message);
+      } finally {
+        this.setState({ isLoading: false });
+      }
     }
   }
 
@@ -39,15 +54,26 @@ export class App extends Component {
     this.setState({ searchValue, images: [], page: 1 });
   };
 
+  handleLoadMore = () => {
+    this.setState(prevState => ({ page: prevState.page + 1 }));
+  }
+
   render () {
-    const { images, isLoading, error } = this.state;
+    const { images, isLoading, endCollection } = this.state;
     return (
       <div className={css.App}>
-        {error && toast.error("Error", {autoClose: 2000})}
         <Searchbar onSubmit={this.formSubmitHandle}/>
-        {isLoading && <h1>Завантажуєм...</h1>}
         {images.length > 0 && <ImageGallery images={images}/>}
-        {/* <Button/> */}
+        {images.length > 0 && !endCollection && <Button onClick={()=>{this.handleLoadMore()}}/>}
+        {isLoading && <ColorRing
+          visible={true}
+          height="80"
+          width="80"
+          ariaLabel="blocks-loading"
+          wrapperStyle={{}}
+          wrapperClass="blocks-wrapper"
+          colors={['#b8c480', '#B2A3B5', '#F4442E', '#51E5FF', '#429EA6']}
+        />}
         <ToastContainer />
       </div>
     );

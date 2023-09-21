@@ -1,4 +1,4 @@
-import * as basicLightbox from 'basiclightbox'
+import PropTypes from 'prop-types';
 import css from './Modal.module.css';
 
 export const Modal = () => {
@@ -10,3 +10,7 @@ export const Modal = () => {
         </div>
     )
 }
+
+Modal.propTypes = {
+    onClick: PropTypes.func.isRequired,
+};

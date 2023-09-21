@@ -17,7 +17,7 @@ export class Searchbar extends Component {
         event.preventDefault();
         const query = this.state.inputValue.trim().toLowerCase();
         if(!query) {
-            return toast.error("Упс! Я не знаю що шукати.", {autoClose: 2000});
+            return toast.error("Sorry, there are no images matching your search query. Please try again", {autoClose: 2000});
         }
         this.props.onSubmit(query);
         this.setState({ inputValue: '' });
