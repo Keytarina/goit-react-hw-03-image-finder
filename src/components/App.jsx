@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Modal } from 'components/Modal/Modal';
 import { Searchbar } from 'components/Searchbar/Searchbar';
 import { ImageGallery } from 'components/ImageGallery/ImageGallery';
 import { Button } from 'components/Button/Button';
@@ -11,11 +12,14 @@ import css from 'components/App.module.css';
 export class App extends Component {
   state = {
     searchValue: '',
+    images: [],
+    page: 1,
     isLoading: false,
     error: '',
-    images: [],
     endCollection: false,
-    page: 1,
+    showModal: false,
+    modalImageURL: '',
+    tags: '',
   };
 
   async componentDidUpdate(_, prevState) {
@@ -50,6 +54,22 @@ export class App extends Component {
     }
   }
 
+  openModal = (url, tags) => {
+    this.setState({
+      showModal: true,
+      modalImageURL: url,
+      tags,
+    });
+  };
+
+  closeModal = () => {
+    this.setState({
+      showModal: false,
+      modalImageURL: '',
+      tags: '',
+    });
+  };
+
   formSubmitHandle = searchValue => {
     this.setState({ searchValue, images: [], page: 1 });
   };
@@ -59,11 +79,16 @@ export class App extends Component {
   }
 
   render () {
-    const { images, isLoading, endCollection } = this.state;
+    const { showModal, modalImageURL, tags, images, isLoading, endCollection } = this.state;
     return (
       <div className={css.App}>
+        {showModal && (
+          <Modal onClose={this.closeModal}>
+            <img src={modalImageURL} alt={tags} />
+          </Modal>)
+        }
         <Searchbar onSubmit={this.formSubmitHandle}/>
-        {images.length > 0 && <ImageGallery images={images}/>}
+        {images.length > 0 && <ImageGallery images={images} onClick={this.openModal}/>}
         {images.length > 0 && !endCollection && <Button onClick={()=>{this.handleLoadMore()}}/>}
         {isLoading && <ColorRing
           visible={true}
