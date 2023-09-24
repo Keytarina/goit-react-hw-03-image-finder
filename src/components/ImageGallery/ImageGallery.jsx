@@ -5,17 +5,16 @@ import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem'
 export const ImageGallery = ({ images, onClick }) => {
     return (
         <ul className={css.ImageGallery}>
-            {images.map(item => {
-                return <ImageGalleryItem 
-                        key={item.id} 
-                        id={item.id}
-                        webformatURL={item.webformatURL} 
-                        largeImageURL={item.largeImageURL} 
-                        altText={item.tags}
-                        onClick={onClick}
-                        />
-            }
-            )}
+            {images.map(item => (
+                <ImageGalleryItem 
+                    key={item.id} 
+                    id={item.id}
+                    webformatURL={item.webformatURL} 
+                    largeImageURL={item.largeImageURL} 
+                    altText={item.tags}
+                    onClick={onClick}
+                />
+            ))}
         </ul>
     )
 }

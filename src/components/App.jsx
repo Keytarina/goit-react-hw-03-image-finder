@@ -15,9 +15,8 @@ export class App extends Component {
     images: [],
     page: 1,
     isLoading: false,
-    error: '',
-    endCollection: false,
-    showModal: false,
+    isEndCollection: false,
+    isShowModal: false,
     modalImageURL: '',
     tags: '',
   };
@@ -43,7 +42,7 @@ export class App extends Component {
         const totalPages = Math.ceil(response.totalHits / 12);
 
         if (page === totalPages) {
-          this.setState({ endCollection: true });
+          this.setState({ isEndCollection: true });
           toast.success('No more pictures');
         }
       } catch (error) {
@@ -56,7 +55,7 @@ export class App extends Component {
 
   openModal = (url, tags) => {
     this.setState({
-      showModal: true,
+      isShowModal: true,
       modalImageURL: url,
       tags,
     });
@@ -64,7 +63,7 @@ export class App extends Component {
 
   closeModal = () => {
     this.setState({
-      showModal: false,
+      isShowModal: false,
       modalImageURL: '',
       tags: '',
     });
@@ -79,17 +78,18 @@ export class App extends Component {
   }
 
   render () {
-    const { showModal, modalImageURL, tags, images, isLoading, endCollection } = this.state;
+    const { isShowModal, modalImageURL, tags, images, isLoading, isEndCollection } = this.state;
     return (
       <div className={css.App}>
-        {showModal && (
+        {console.log(this.state)}
+        {isShowModal && (
           <Modal onClose={this.closeModal}>
             <img src={modalImageURL} alt={tags} />
-          </Modal>)
-        }
+          </Modal>
+        )}
         <Searchbar onSubmit={this.formSubmitHandle}/>
         {images.length > 0 && <ImageGallery images={images} onClick={this.openModal}/>}
-        {images.length > 0 && !endCollection && <Button onClick={()=>{this.handleLoadMore()}}/>}
+        {images.length > 0 && !isEndCollection && <Button onClick={()=>{this.handleLoadMore()}}/>}
         {isLoading && <ColorRing
           visible={true}
           height="80"

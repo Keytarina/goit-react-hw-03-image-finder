@@ -15,19 +15,21 @@ export class Modal extends Component {
         window.removeEventListener('keydown', this.handleKeyEsc);
     }
     //Метод закриття модального вікна по Escape
-    handleKeyEsc = (e) => {
-        if(e.code === 'Escape') this.props.closeModal();
+    handleKeyEsc = (event) => {
+        if(event.code === 'Escape') {
+            this.props.onClose();
+        }
     }
     //Метод закриття модального по кліку на backdrop
-    handleBackdropClick = e => {
-        if (e.target === e.currentTarget) {
+    handleBackdropClick = event => {
+        if (event.target === event.currentTarget) {
             this.props.onClose();
         }
     };
     render() {
         return createPortal(
-            <div class={css.Overlay} onClick={this.handleBackdropClick}>
-                <div class={css.Modal}>{this.props.children}</div>
+            <div className={css.Overlay} onClick={this.handleBackdropClick}>
+                <div className={css.Modal}>{this.props.children}</div>
             </div>,
             modalRoot
         )
